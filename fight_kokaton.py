@@ -173,9 +173,9 @@ def main():
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]  # 内包表記
     beams = []  # ビームクラスのインスタンスを複数格納するリスト
     #beam = None  # ゲーム初期化時にはビームは存在しない
-    score_string_color = (0, 0, 255)
-    now_score = 0
-    score = Score(score_string_color,now_score)
+    score_string_color = (0, 0, 255)  # スコアの文字の色
+    now_score = 0  # 現在のスコア
+    score = Score(score_string_color,now_score) #Scoreインスタンス
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -201,28 +201,23 @@ def main():
         
         for bo, bomb in enumerate(bombs):
             for bm, beam in enumerate(beams):
-                if beam is not None:
+                if beam is not None: 
                     if beam.rct.colliderect(bomb.rct):
                         # beamがbombに衝突したら、beamとbombを消滅させる
-                        beams[bm] = None
+                        beams[bm] = None # beamsのbm番目の要素をNoneに変更
                         bombs[bo] = None
                         bird.change_img(6, screen)  # こうかとんの画像を6.pngに変更
-                        pg.display.update()
-                        now_score += 1
-                    if check_bound(beam.rct) != (True,True):
-                        beams[bm] = None
+                        pg.display.update() 
+                        now_score += 1  # 現在のscoreを1増やす
+                    if check_bound(beam.rct) != (True,True):  # 画面外なら
+                        beams[bm] = None  # beamsのbm番目の要素をNoneに変更
         bombs = [bomb for bomb in bombs if bomb is not None]  # Noneの部分を詰める
-        beams = [beam for beam in beams if beam is not None]
+        beams = [beam for beam in beams if beam is not None]  # Noneの部分を詰める
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        #if beams is not None:
         for bm, beam in enumerate(beams):
-            # if check_bound(beam.rect.left == (True,True)):
-            #     beams.remove(beams[bm])
-            #     continue
-            if beam is not None:
-                beam.update(screen)   
+            beam.update(screen)   
         for bomb in bombs:
             bomb.update(screen)
         score.update(now_score,screen)
