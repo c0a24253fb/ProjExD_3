@@ -154,10 +154,32 @@ class Score:
 
     def update(self, num: int, screen: pg.Surface):
         """
-        update
+        表示するスコアを変更する
+        引数 num: int型のスコア, screen :画面surface
         """
         self.img = self.fonto.render(f"score:{num}", 0, self.color)
         screen.blit(self.img, self.rect)
+
+class Explosion:
+    """
+    Bombの爆発を描画するクラス
+    """
+    def __init__(self, bomb: "Bomb", life: int):
+        self.img = pg.image.load("fig/explosion.gif")
+        self.img2 = pg.transform.flip(self.img, True, True)
+        self.imgs = (self.img, self.img2)
+        self.img_b = bomb.img
+        self.rct = self.img_b.get_rect()
+        #self.rct.center = self.rct.center
+        self.life = life
+
+    def update(self, screen: pg.Surface):
+        """
+        爆発経過時間と爆発エフェクトの制御
+        """
+        self.life -= 1
+        if self.life >= 0:
+            screen.blit(self.imgs[self.life%2], self.rct)
 
 
 def main():
@@ -176,6 +198,7 @@ def main():
     score_string_color = (0, 0, 255)  # スコアの文字の色
     now_score = 0  # 現在のスコア
     score = Score(score_string_color,now_score) #Scoreインスタンス
+    explosions = []  # Explosionクラスのインスタンスを格納するリスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -204,6 +227,7 @@ def main():
                 if beam is not None: 
                     if beam.rct.colliderect(bomb.rct):
                         # beamがbombに衝突したら、beamとbombを消滅させる
+                        explosions.append(Explosion(bomb,10))
                         beams[bm] = None # beamsのbm番目の要素をNoneに変更
                         bombs[bo] = None
                         bird.change_img(6, screen)  # こうかとんの画像を6.pngに変更
@@ -213,6 +237,7 @@ def main():
                         beams[bm] = None  # beamsのbm番目の要素をNoneに変更
         bombs = [bomb for bomb in bombs if bomb is not None]  # Noneの部分を詰める
         beams = [beam for beam in beams if beam is not None]  # Noneの部分を詰める
+        explosions = [expl for expl in explosions if expl.life >= 0]
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -220,6 +245,8 @@ def main():
             beam.update(screen)   
         for bomb in bombs:
             bomb.update(screen)
+        for expl in explosions:
+            expl.update(screen)
         score.update(now_score,screen)
         pg.display.update()
         tmr += 1
