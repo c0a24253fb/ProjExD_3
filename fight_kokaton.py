@@ -168,9 +168,8 @@ class Explosion:
         self.img = pg.image.load("fig/explosion.gif")
         self.img2 = pg.transform.flip(self.img, True, True)
         self.imgs = (self.img, self.img2)
-        self.img_b = bomb.img
-        self.rct = self.img_b.get_rect()
-        #self.rct.center = self.rct.center
+        self.rct = self.img.get_rect()
+        self.position = bomb.rct.center
         self.life = life
 
     def update(self, screen: pg.Surface):
@@ -179,7 +178,7 @@ class Explosion:
         """
         self.life -= 1
         if self.life >= 0:
-            screen.blit(self.imgs[self.life%2], self.rct)
+            screen.blit(self.imgs[self.life%2], self.position)
 
 
 def main():
