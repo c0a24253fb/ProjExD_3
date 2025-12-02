@@ -154,7 +154,8 @@ class Score:
 
     def update(self, num: int, screen: pg.Surface):
         """
-        update
+        updateメソッドを定義
+        引数1 num: スコア 引数2 screen: 画面Surface
         """
         self.img = self.fonto.render(f"score:{num}", 0, self.color)
         screen.blit(self.img, self.rect)
