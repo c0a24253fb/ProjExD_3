@@ -175,6 +175,7 @@ class Explosion:
     def update(self, screen: pg.Surface):
         """
         爆発経過時間と爆発エフェクトの制御
+        引数1 screen: 画面Surface
         """
         self.life -= 1
         if self.life >= 0:
